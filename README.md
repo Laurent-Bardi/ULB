@@ -1,5 +1,5 @@
 <h2>
-Ultra Load Balancer Ever wanted to have always-responding DNS or LDAP server : ULB is for you!
+Ultra Load Balancer : Ever wanted to have always-responding DNS or LDAP server : ULB is for you!
 </h2>
 <h3>
 Prereq
