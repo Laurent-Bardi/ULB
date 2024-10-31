@@ -1,10 +1,14 @@
 <h2>
-Ultra Load Balancer : Ever wanted to have always-responding DNS or LDAP server : ULB is for you!
+Ultra Load Balancer : Ever wanted to have an always responding DNS or LDAP server : ULB is for you!
 </h2>
 <h3>
 Prereq
 </h3>
 <ul>
+	<li>	
+Not working with network-manager
+	</li>
+
 <li>	
 Only tested on Debian 12 Bookworm.
 	</li>
@@ -12,21 +16,21 @@ Only tested on Debian 12 Bookworm.
 Only in IPv4
 	</li>
 </ul>
-You need 2 machines (physical,vm or container) with at least 2 network interfaces. The first interface is the management of the machine, the second will be the load-balanced redirector.<br><br>
+You need 2 machines (physical, vm or container) with at least 2 network interfaces. The first interface is the management of the machine, the second will be the load-balanced redirector.<br><br>
 
 ![shema3](https://github.com/user-attachments/assets/c7e71cb1-362d-48b9-bfa4-503e78702928)
 
-In my example i will use 2 machines with each two interfaces. So on each machine you will have :
+In my example, I will use 2 machines with each two interfaces. So on each machine you will have :
 <ul>
 <li>
-	ens19 the interface in data lan that speaks to servers and clients
+	ens19 the interface in data LAN that speaks to servers and clients
 </li>
 <li>
-	ens18 the interface in managment lan for managing ULB.
+	ens18 the interface in management LAN for managing ULB.
 </li>
 </ul>
 <h3>
-So let's start the install : 
+So, let's start the installation : 
 </h3>
 On each machine do 
 <code>
@@ -34,7 +38,7 @@ On each machine do
 cd ULB
 </code>
 
-Here the install script is 
+Here the installation script is 
 <code>
 install_ulb.pl v1.00 usage :
  install_ulb.pl -h
@@ -53,20 +57,20 @@ install_ulb.pl v1.00 usage :
 some explanations : regarding the schema 
 <ul>
 <li>
-	-p the path where all the ULB files (scripts, data, config) should stay (generally /opt/ULB or /usr/local/ULB )
+	-p the path where all the ULB files (scripts, data, config) should stay (generally /opt/ULB or /usr/local/ULB)
 </li>
 
 <li>
-	-a parameter stands for IP<sub>rb1</sub> for the first machine and IP<sub>rb2</sub> for the second. It will be the real load-blancer IP on the data subnet
+	-a parameter stands for IP<sub>rb1</sub> for the first machine and IP<sub>rb2</sub> for the second. It will be the real load-balancer IP on the data subnet
 </li>
 <li>
 	-b parameter stands for IP<sub>rb1-rb2</sub> it is the virtual IP that will float between the interface on the machines (on ens19 in my case)
 </li>
 <li>
-	-n is the vhid parameter, between 1 and 255 it must be UNIQUE on the network (otherwise ucarp would mix theirs configurations )
+	-n is the vhid parameter, between 1 and 255 it must be UNIQUE on the network (otherwise ucarp would mix theirs configurations)
 </li>
 <li>
-	-m is master (the one who will own, at first, the virtual  IP<sub>rb1-rb2</sub>) . 
+	-m is master (the one who will own, at first, the virtual  IP<sub>rb1-rb2</sub>). 
 MUST BE ON ONLY ON ONE OF THE TWO MACHINES
 </li>
 </ul>
@@ -83,12 +87,15 @@ second machine
  perl install_ulb.pl -p /usr/local/ULB -i ens19 -a 10.56.64.19 -b 10.56.65.8  -n 8
 </code>
 
-Here you see that the first machine will became the master. Feel free to test by rebooting /making shutdown-restart of the machine that virtual  IP<sub>rb1-rb2</sub> move from one machine to the other.
+Here you see that the first machine will became the master. You are welcome to test by rebooting /making shutdown-restart of the machine that virtual  IP<sub>rb1-rb2</sub> move from one machine to the other.
+
+Security : on the 2 machines, edit the file /etc/network/interfaces.d/ucarp_$interface (the one you use with -i  parameter when doing install)
+and change "ucarp-password totolitoto" with a password of max 20 characters.
 
 <h3>
 Redirectors
 </h3>
-Now we are going to define waht redirectors we want. Each must be run on the two machines (otherwise they will not makes the same redirections).
+Now we are going to define what redirectors we want. Each must be run on the two machines (otherwise they will not make the same redirections).
 
 <h4>
 Example 1 DNS
@@ -99,7 +106,7 @@ Suppose we have three DNS servers (can be the number you want)
 <li> 10.64.200.71</li>
 <li> 10.64.200.81</li>
 </ul>
-The virtual IP (IP<sub>rb1-rb2</sub>) is 10.56.65.8 .<br>
+The virtual IP (IP<sub>rb1-rb2</sub>) is 10.56.65.8.<br>
 Then the code will be
 <code>
 # get in the ULB path
@@ -127,7 +134,7 @@ Suppose we have three AD  servers (can be the number you want)
 <li> 10.64.200.71</li>
 <li> 10.64.200.81</li>
 </ul>
-The virtual IP (IP<sub>rb1-rb2</sub>) is 10.56.65.8 .<br>
+The virtual IP (IP<sub>rb1-rb2</sub>) is 10.56.65.8.<br>
 Then the code will be
 <code>
 # get in the ULB path
@@ -153,7 +160,7 @@ Suppose we have three LDAP  servers (can be the number you want)
 <li> 10.64.200.71</li>
 <li> 10.64.200.81</li>
 </ul>
-The virtual IP (IP<sub>rb1-rb2</sub>) is 10.56.65.8 .<br>
+The virtual IP (IP<sub>rb1-rb2</sub>) is 10.56.65.8.<br>
 Then the code will be
 <code>
 # get in the ULB path
