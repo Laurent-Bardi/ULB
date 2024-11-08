@@ -167,10 +167,10 @@ foreach my $f (@::FILES_DISTRIB_LIB)
 # write wrapper for startup scripts
 
 my $add_addr = "/sbin/ip addr add $vip/32 dev $if:ucarp";
-Std::writefile("$path/bin/start_ulb.sh",("#!/bin/bash\n#$::copyright_lic\ncd /usr/local/ulb/sbin\n$add_addr\nperl launch_all_farm.pl\n"));
+Std::writefile("$path/bin/start_ulb.sh",("#!/bin/bash\n#$::copyright_lic\ncd $path/sbin\n$add_addr\nperl launch_all_farm.pl\n"));
 Std::mexec("/bin/chmod 750 $path/bin/start_ulb.sh ");
 my $del_addr = "/sbin/ip addr del $vip/32 dev $if:ucarp";
-Std::writefile("$path/bin/stop_ulb.sh",("#!/bin/bash\n#$::copyright_lic\ncd /usr/local/ulb/sbin\nperl kill_all_farm.pl\n$del_addr\n"));
+Std::writefile("$path/bin/stop_ulb.sh",("#!/bin/bash\n#$::copyright_lic\ncd $path/sbin\nperl kill_all_farm.pl\n$del_addr\n"));
 Std::mexec("/bin/chmod 750 $path/bin/stop_ulb.sh  ");
 Std::println("End install, now you need to generate a farm");
 
